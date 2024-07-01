@@ -1,11 +1,12 @@
 import React from 'react';
 import * as XLSX from 'xlsx';
 import axios from 'axios';
-
+import Swal from 'sweetalert2';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function FileInputCompany() {
     const [data, setData] = React.useState(null);
+    const [loading, setLoading] = React.useState(false);
 
     const handleFileUpload = (e) => {
         const file = e.target.files[0];
@@ -40,14 +41,28 @@ function FileInputCompany() {
         return `${year}-${month}-${day}`;
     };
 
-    
     const handleRowSubmit = () => {
-        axios.post('https://task1backend-qwvm.onrender.com/api/company/', data)
+        setLoading(true);
+        axios.post('http://localhost:8001/api/company/', data)
         .then(response => {
             console.log('Batch submitted successfully:', response.data);
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: `${response.data.message}`,
+            });
+            setData(null); // Clear data after successful submission if needed
         })
         .catch(error => {
             console.error('Error submitting batch:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: `${error.message}`,
+            });
+        })
+        .finally(() => {
+            setLoading(false);
         });
     };
 
@@ -92,9 +107,9 @@ function FileInputCompany() {
                         <button
                             className="btn btn-primary"
                             onClick={handleRowSubmit}
-                            disabled={!data.some(row => !row.submitted)}
+                            disabled={!data.some(row => !row.submitted) || loading}
                         >
-                            Submit All Rows
+                            {loading ? 'Submitting...' : 'Submit All Rows'}
                         </button>
                     </div>
                 </div>
