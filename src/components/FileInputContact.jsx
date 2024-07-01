@@ -1,8 +1,8 @@
 import React from 'react';
 import * as XLSX from 'xlsx';
-import axios from 'axios'; // Import Axios for HTTP requests
+import axios from 'axios';
 
-import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function FileInputContact() {
     const [data, setData] = React.useState(null);
@@ -41,7 +41,7 @@ function FileInputContact() {
     };
 
     const handleRowSubmit = () => {
-        axios.post('http://localhost:8001/api/contact/', data)
+        axios.post('https://task1backend-qwvm.onrender.com/api/contact/', data)
         .then(response => {
             console.log('Batch submitted successfully:', response.data);
         })
